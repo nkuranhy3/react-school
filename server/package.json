@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "react school app backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./index.js --exec babel-node -e js"
+  },
+  "repository": "https://github.com/nkuranhy3/react-school.git",
+  "author": "Alfred Boateng <programmingwithalfred@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-boost": "^0.1.15",
+    "apollo-server-express": "^2.0.6",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^14.0.2",
+    "graphql-server-express": "^1.4.0",
+    "graphql-tools": "^3.1.1",
+    "mongoose": "^5.2.13",
+    "nodemon": "^1.18.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1"
+  }
+}
