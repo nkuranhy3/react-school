@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Layout, Header, Navigation, Drawer, Content} from 'react-mdl';
-import Main from './components/Main'
+import Main from './components/Main';
+import './App.css';
+
 class App extends Component {
   render() {
     return (
 <div className="demo-big-content">
     <Layout>
-        <Header title="Title" scroll>
+        <Header className="header-color" title="Title" scroll>
             <Navigation>
                 <a href="/">Home</a>
                 <a href="/login">Login</a>
