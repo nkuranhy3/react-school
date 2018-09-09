@@ -2,12 +2,13 @@ const express = require("express");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const schema = require("./schema");
+const cors =require("cors");
 
 const PORT = 4000;
 
 const app = express();
 
-
+app.use(cors());
 
 mongoose.connect(
     "mongodb://localhost:27017/myJobs",
