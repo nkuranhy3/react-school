@@ -1,82 +1,52 @@
 const { ApolloServer, gql } = require("apollo-server-express");
 const Job = require("./models/Job");
-const Applicant = require("./models/Applicant");
+const Company = require("./models/Company");
 
 
 const typeDefs = gql`
 type Job {
     id: ID
-    name: String,
-    postedBy: String,
-    postedDate: String,
-    applyBy: String,
-    yearsOfEducation: Int,
-    benefits: String,
-    areasOfStudy: AreasOfStudy,
-    jobType: JobType
+    name: String
+    applyBefore: String
+    qualifications: String
+    description: String
+    benefits: String
+    company: Company
+}
+type Company {
+    id: ID 
+    name: String
+    location: String
+    managerName: String
+    companyHistory:String
+    jobs: [Job]
 }
 
-type Applicant {
-  id: ID
-  name: String,
-  gender: Gender,
-  age: Int,
-  yearsOfEducation: Int,
-  areasOfStudy: AreasOfStudy,
-  workExperience: String,
-  jobtype: JobType
-}
-
-enum AreasOfStudy {
-    JAVA
-    JAVASCRIPT
-    REACT
-    ANGULAR JS
-    XAMARIN
-    RUBY ON RAILS
-    PYTON
-    NODE JS
-}
-
-enum JobType {
-    FULLTIME
-    PARTTIME
-    CONTRACT
-}
-
-enum Gender {
-    MALE
-    FEMALE
-    OTHER
-}
 
 type Query {
     getJob(id: ID): Job
     allJobs: [Job]
-    getApplicant(id: ID): Applicant
-    allApplicants: [Applicant]
+    getCompany(id: ID): Company
+    allCompanies: [Company]
+
 }
 
 type Mutation {
-    addJob(
-        name: String,
-        postedBy: String,
-        postedDate: String,
-        applyBy: String,
-        yearsOfEducation: Int,
-        benefits: String,
-        areasOfStudy: AreasOfStudy,
-        jobType: JobType
-    ): Job
-    addApplicant(
-        name: String,
-        gender: Gender,
-        age: Int,
-        yearsOfEducation: Int,
-        areasOfStudy: AreasOfStudy,
-        workExperience: String,
-        jobtype: JobType
-    ): Applicant
+    createNewJob(
+        name: String
+        applyBefore: String
+        qualifications: String
+        description: String
+        benefits: String
+        companyId: ID
+        ): Job
+
+    createNewCompany(
+        name: String
+        location: String
+        managerName: String
+        companyHistory:String
+        ): Company
 }
 `;
 
@@ -88,41 +58,52 @@ const resolvers = {
         allJobs: root => {
             return Job.find();
         },
-        getApplicant: (root, { id }) => {
-            return Applicant.findById(id);
-            },
-        allApplicants: root => {
-            return Applicant.find();
+        getCompany: (root, { id }) => {
+        return Company.findById(id);
+        },
+        allCompanies: root => {
+            return Company.find();
         },
 
         },
     Mutation: {
-        addJob: (root, { name, postedBy, postedDate, applyBy, yearsOfEducation, benefits, areasOfStudy, jobType }) => {
+        createNewJob: (root, { name, applyBefore, qualifications, benefits, companyId }) => {
             let job = new Job({
               name: name,
-              postedBy: postedBy,
-              postedDate: postedDate,
-              applyBy: applyBy,
-              yearsOfEducation: yearsOfEducation,
+              applyBefore: applyBefore,
+              qualifications: qualifications,
               benefits: benefits,
-              areasOfStudy: areasOfStudy,
-              jobType: jobType
+              companyId: companyId,
             });
             return job.save();
           },
-          addApplicant: (root, { name, gender, age, yearsOfEducation, areasOfStudy, workExperience, jobType }) => {
-            let applicant = new Applicant({
-              name: name,
-              gender: gender,
-              yearsOfEducation: yearsOfEducation,
-              workExperience: workExperience,
-              areasOfStudy: areasOfStudy,
-              age: age,
-              jobType: jobType
+         createNewCompany: (root, { name, location, managerName, companyHistory}) => {
+            let company = new Company({
+                name: name,
+                location: location,
+                managerName: managerName,
+                companyHistory:companyHistory,
             });
-            return applicant.save();
+            return company.save();
           },
-    }
+        },
+        Company:{
+            jobs: company =>Job.find({companyId: company.Id})
+        },
+        Job: {
+           company: job =>Company.findById(job.companyId) 
+        }
 };
 
 module.exports = new ApolloServer({ typeDefs, resolvers });
+
+
+
+
+// Author: {
+//     // books: author => _.filter(books, { authorId: author.id })
+//     books: author => Book.find({ authorId: author.id })
+//   },
+//   Book: {
+//     // author: book => _.find(authors, { id: book.authorId })
+//     author: book => Author.findById(book.authorId)
